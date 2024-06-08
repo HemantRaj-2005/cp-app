@@ -2,7 +2,9 @@
 import React, { useState } from 'react';
 import Input from '../common/Input';
 import PasswordInput from '../common/PasswordInput';
+import { AiFillGoogleCircle } from 'react-icons/ai';
 import Button from '../common/Button';
+
 
 const RegisterForm = ({ toggleForm }) => {
   const [username, setUsername] = useState('');
@@ -36,9 +38,9 @@ const RegisterForm = ({ toggleForm }) => {
           onChange={(e) => setCountryCode(e.target.value)}
           className="w-1/4 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-black"
         >
+          <option value="+91">+91 (India)</option>
           <option value="+1">+1 (USA)</option>
           <option value="+44">+44 (UK)</option>
-          <option value="+91">+91 (India)</option>
           <option value="+81">+81 (Japan)</option>
           <option value="+61">+61 (Australia)</option>
           {/* Add more country codes as needed */}
@@ -48,7 +50,10 @@ const RegisterForm = ({ toggleForm }) => {
       <Input type="date" placeholder="Date of Birth" value={dob} onChange={(e) => setDob(e.target.value)} />
       <Input type="text" placeholder="Institute Name" value={institute} onChange={(e) => setInstitute(e.target.value)} />
       <Button type="submit">Sign Up</Button>
-      <Button type="button" onClick={handleGoogleLogin}>Sign Up with Google</Button>
+      <Button type="button" onClick={handleGoogleLogin}>
+        <AiFillGoogleCircle className='w-6 h-6 mr-2' />
+        Sign Up with Google
+      </Button>
       <p className="mt-2 text-sm">
         Already have an account? <span className="text-blue-500 cursor-pointer" onClick={toggleForm}>Login</span>
       </p>

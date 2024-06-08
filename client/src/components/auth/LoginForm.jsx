@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Input from '../common/Input';
 import PasswordInput from '../common/PasswordInput';
 import Button from '../common/Button';
+import { AiFillGoogleCircle } from 'react-icons/ai';
 
 const LoginForm = ({ toggleForm }) => {
   const [email, setEmail] = useState('');
@@ -23,7 +24,10 @@ const LoginForm = ({ toggleForm }) => {
       <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
       <PasswordInput placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
       <Button type="submit">Login</Button>
-      <Button type="button" onClick={handleGoogleLogin}>Login with Google</Button>
+      <Button type="button" onClick={handleGoogleLogin}>
+        <AiFillGoogleCircle className='w-6 h-6 mr-2' />
+        Login with Google
+      </Button>
       <p className="mt-2 text-sm">
         Don't have an account? <span className="text-blue-500 cursor-pointer" onClick={toggleForm}>Sign Up</span>
       </p>
