@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema({
   phone: { type: String },
   dob: { type: Date },
   institute: { type: String },
-  googleId: { type: String, unique: true },
 });
 
 userSchema.pre('save', async function (next) {

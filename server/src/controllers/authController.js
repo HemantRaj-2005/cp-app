@@ -8,6 +8,7 @@ const generateToken = require('../utils/generateToken');
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password, phone, dob, institute } = req.body;
 
+  // Check if user with the same email already exists
   const userExists = await User.findOne({ email });
 
   if (userExists) {
@@ -15,10 +16,11 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exists');
   }
 
+  // Create new user
   const user = await User.create({
     username,
     email,
-    password,
+    password, // Remember to hash passwords securely before saving them
     phone,
     dob,
     institute,
@@ -29,7 +31,7 @@ const registerUser = asyncHandler(async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
-      token: generateToken(user._id),
+      token: generateToken(user._id), // Generate token upon successful registration
     });
   } else {
     res.status(400);
@@ -43,14 +45,16 @@ const registerUser = asyncHandler(async (req, res) => {
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
+  // Find user by email
   const user = await User.findOne({ email });
 
+  // Validate user and password
   if (user && (await user.matchPassword(password))) {
     res.json({
       _id: user._id,
       username: user.username,
       email: user.email,
-      token: generateToken(user._id),
+      token: generateToken(user._id), // Generate token upon successful authentication
     });
   } else {
     res.status(401);
