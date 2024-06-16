@@ -1,9 +1,11 @@
+// src/components/auth/RegisterForm.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Input from '../common/Input';
 import PasswordInput from '../common/PasswordInput';
 import { AiFillGoogleCircle } from 'react-icons/ai';
 import Button from '../common/Button';
+import axios from 'axios';
 
 const RegisterForm = ({ toggleForm }) => {
   const [username, setUsername] = useState('');
@@ -14,16 +16,15 @@ const RegisterForm = ({ toggleForm }) => {
   const [dob, setDob] = useState('');
   const [institute, setInstitute] = useState('');
   const [countryCode, setCountryCode] = useState('+91'); // Default country code
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState('');
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      setError('Passwords do not match');
       return;
     }
 
@@ -32,25 +33,35 @@ const RegisterForm = ({ toggleForm }) => {
         username,
         email,
         password,
-        phone: `${countryCode}${phone}`,
+        phone,
         dob,
-        institute
+        institute,
       });
-      setSuccess('Registration successful!');
-      console.log('User registered:', response.data);
+
+      // Handle successful registration
+      localStorage.setItem('token', response.data.token);
+      console.log('Registration successful:', response.data);
+
+      // Redirect to the dashboard
+      navigate('/dashboard');
     } catch (error) {
-      setError('Registration failed. Please try again.');
+      if (error.response && error.response.data) {
+        setError(error.response.data.message);
+      } else {
+        setError('Registration failed');
+      }
       console.error('Registration failed:', error);
     }
   };
 
   const handleGoogleLogin = () => {
-    window.open('http://localhost:5000/api/auth/google', '_self');
+    // Add your Google login logic here
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <h2 className="text-xl font-bold">Sign Up</h2>
+      {error && <p className="text-red-500">{error}</p>}
       <Input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
       <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
       <PasswordInput placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
@@ -74,11 +85,9 @@ const RegisterForm = ({ toggleForm }) => {
       <Input type="text" placeholder="Institute Name" value={institute} onChange={(e) => setInstitute(e.target.value)} />
       <Button type="submit">Sign Up</Button>
       <Button type="button" onClick={handleGoogleLogin}>
-        <AiFillGoogleCircle className='w-6 h-6 mr-2' />
+        <AiFillGoogleCircle className="w-6 h-6 mr-2" />
         Sign Up with Google
       </Button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
       <p className="mt-2 text-sm">
         Already have an account? <span className="text-blue-500 cursor-pointer" onClick={toggleForm}>Login</span>
       </p>
